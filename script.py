@@ -1,12 +1,10 @@
-#  with tdqm
-
 import os
 import json
 import requests
 from datetime import datetime, timedelta
 from tqdm import tqdm
 
-# All languages
+# Define available languages and their respective URL paths
 languages = {
     "hi": "hindi",
     "bn": "bengali",
@@ -27,9 +25,9 @@ languages = {
 # Define the base URL pattern
 base_url = "https://madhubanmurli.org/murlis/{lang}/pdf/murli-{year}-{month:02d}-{day:02d}.pdf"
 
-# Set the year range
-start_year = 2019
-end_year = 2019
+# Set the date range
+start_date = datetime(2017, 1, 1)
+end_date = datetime(2025, 3, 26)
 
 # Create a main directory to store PDFs
 main_dir = "madhubanmurli_pdfs"
@@ -45,14 +43,11 @@ if os.path.exists(metadata_file):
 else:
     metadata = []
 
-# Loop through each date
-start_date = datetime(start_year, 1, 1)
-end_date = datetime(end_year, 1, 4)
-current_date = start_date
-
 total_days = (end_date - start_date).days + 1
+total_files = total_days * len(languages)
 
-with tqdm(total=total_days * len(languages), desc="Downloading PDFs", unit="file") as pbar:
+with tqdm(total=total_files, desc="Downloading PDFs", unit="file") as pbar:
+    current_date = start_date
     while current_date <= end_date:
         year, month, day = current_date.year, current_date.month, current_date.day
         
